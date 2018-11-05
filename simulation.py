@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 from copy import deepcopy
 from random import shuffle
 
@@ -35,6 +36,9 @@ HAND_RANKS = {
     PAIR: 'Pair',
     HIGH_CARD: 'High Card',
 }
+
+DELIM=','
+
 deck = [(val, suit) for val in VALUES for suit in SUITS]
 
 def is_royal_flush(hand):
@@ -154,8 +158,54 @@ def shuffled_deck():
     d = deepcopy(deck)
     shuffle(d)
     return d
+    
 
 def deal_hand():
     d = shuffled_deck()
     return d[0:5]
 
+def deal_hand_from_deck(d):
+    return d[0:5]
+
+if (__name__=='__main__'):
+    
+    # Get shuffled deck
+    d = shuffled_deck()
+    
+    counts = [0,0,0,0,0,0,0,0,0,0]
+    iterations = 10000000
+    display_at=100
+    print('Iteration%sRoyal Flush%sStraight Flush%s4 of a Kind%sFull House%sFlush%sStraight%s3 of a Kind%s 2 Pair%sPair%sHigh Card'%(DELIM,
+                                                                                                                                     DELIM,
+                                                                                                                                     DELIM,
+                                                                                                                                     DELIM,
+                                                                                                                                     DELIM,
+                                                                                                                                     DELIM,
+                                                                                                                                     DELIM,
+                                                                                                                                     DELIM,
+                                                                                                                                     DELIM,
+                                                                                                                                     DELIM))
+    for i in range(1,iterations+1):
+        shuffle(d)
+        hand=deal_hand_from_deck(d)
+        counts[get_hand_rank(hand)-1] += 1 
+
+        if (i == display_at):
+            print(i, end=DELIM)
+            for j in counts:
+                print(j, end=DELIM)
+            print()
+            display_at*=10
+
+    print('Final Count:')
+    print(i, end=DELIM)
+    for j in counts:
+        print(j, end=DELIM)
+    print()
+
+
+    print('chance', end=DELIM)
+    for j in counts:
+        print(float(j/iterations), end=DELIM)
+
+    print('\nDone.')
