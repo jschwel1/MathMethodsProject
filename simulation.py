@@ -9,7 +9,7 @@ VALUE_VALUES={
     '3':3,
     '4':4,
     '5':5,
-    '6':5,
+    '6':6,
     '7':7,
     '8':8,
     '9':9,
@@ -73,24 +73,14 @@ def is_straight_flush(hand):
     return False
 
 def is_four_of_a_kind(hand):
-    counts = {}
-    for card in hand:
-        if card[0] in counts:
-            counts[card[0]] += 1
-        else:
-            counts[card[0]] = 1
-
-    return (4 in counts.values())
+    val, suit = zip(*hand)
+    counts = [val.count(c) for c in list(set(val))]
+    return 4 in counts
 
 def is_full_house(hand):
-    counts = {}
-    for card in hand:
-        if card[0] in counts:
-            counts[card[0]] += 1
-        else:
-            counts[card[0]] = 1
-
-    return (2 in counts.values() and 3 in counts.values())
+    val, suit = zip(*hand)
+    counts = [val.count(c) for c in list(set(val))]
+    return ((3 in counts) and (2 in counts))
 
 def is_flush(hand):
     val, suit = zip(*hand)
@@ -105,47 +95,25 @@ def is_straight(hand):
     return False
 
 def is_three_of_a_kind(hand):
-    counts = {}
-    for card in hand:
-        if card[0] in counts:
-            counts[card[0]] += 1
-        else:
-            counts[card[0]] = 1
-
-    for score in counts:
-        if (counts[score] == 3):
-            return True
-    return False
+    val, suit = zip(*hand)
+    counts = [val.count(c) for c in list(set(val))]
+    return 3 in counts
 
 def is_two_pair(hand):
-    counts = {}
-    for card in hand:
-        if card[0] in counts:
-            counts[card[0]] += 1
-        else:
-            counts[card[0]] = 1
+    val, suit = zip(*hand)
+    counts = [val.count(c) for c in list(set(val))]
+    if 2 in counts:
+        counts.remove(2)
+        return 2 in counts
+    else:
+        return False
 
-    pairs = 0
-    for count in counts:
-        if (counts[count]==2):
-            pairs+=1
-
-    return (pairs==2)
 
 def is_pair(hand):
-    counts = {}
-    for card in hand:
-        if card[0] in counts:
-            counts[card[0]] += 1
-        else:
-            counts[card[0]] = 1
+    val, suit = zip(*hand)
+    counts = [val.count(c) for c in list(set(val))]
+    return 2 in counts
 
-    pairs = 0
-    for count in counts:
-        if (counts[count] == 2):
-            pairs += 1
-
-    return (pairs == 1)
 
 def get_hand_rank(hand):
     if(is_royal_flush(hand)):
@@ -181,6 +149,14 @@ def deal_hand():
 
 def deal_hand_from_deck(d):
     return d[0:5]
+
+def deal_n_cards_to_h_hands(d,n,h):
+    hands=[]
+    startIdx = 0
+    for i in range(h):
+        hands.append(d[startIdx:startIdx+n])
+        startIdx+=n
+    return tuple(hands)
 
 if (__name__=='__main__'):
     
